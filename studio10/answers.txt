@@ -1,0 +1,61 @@
+1. Haoxuan Sun, Haoran Qin, Brendan Yang
+
+
+2. 
+1) Subdirectory contents:
+root@bread-n-pii:/sys/fs/cgroup/iomonitor# ls
+cgroup.controllers	cgroup.threads	     memory.high	  memory.swap.high
+cgroup.events		cgroup.type	     memory.low		  memory.swap.max
+cgroup.freeze		cpu.stat	     memory.max		  pids.current
+cgroup.max.depth	io.max		     memory.min		  pids.events
+cgroup.max.descendants	io.stat		     memory.oom.group	  pids.max
+cgroup.procs		memory.current	     memory.stat
+cgroup.stat		memory.events	     memory.swap.current
+cgroup.subtree_control	memory.events.local  memory.swap.events
+
+2) io.stat contents:
+<empty>
+
+
+3.
+io.stat SEQUENTIAL contents:
+179:0 rbytes=41140224 wbytes=0 rios=316 wios=0 dbytes=0 dios=0 
+
+io.stat RANDOM contents:
+179:0 rbytes=118710272 wbytes=0 rios=9536 wios=0 dbytes=0 dios=0
+
+For the first run, the bytes read were less than that of the RANDOM access reads. Since RANDOM access requires
+searching through the file to seek a specific part of the file each read, it requires more time (and overall bytes
+read) to begin reading the data we want, as opposed to SEQUENTIAL access that can simply continue reading the
+desired data from where the file pointer left off.
+
+
+4.
+--Sequential Runs-- 
+No Advice
+179:0 rbytes=41140224 wbytes=0 rios=316 wios=0 dbytes=0 dios=0
+179:0 rbytes=41140224 wbytes=0 rios=316 wios=0 dbytes=0 dios=0
+
+Sequential Advice
+179:0 rbytes=41402368 wbytes=0 rios=161 wios=0 dbytes=0 dios=0
+179:0 rbytes=41402368 wbytes=0 rios=161 wios=0 dbytes=0 dios=0
+Diff:
+rbytes=-262144 rios=-155
+
+Random Advice
+179:0 rbytes=40960000 wbytes=0 rios=10000 wios=0 dbytes=0 dios=0
+179:0 rbytes=40960000 wbytes=0 rios=10000 wios=0 dbytes=0 dios=0
+Diff:
+rbytes=180224 rios=9839
+
+--Results--
+We notice that with sequential advice, fewer read IOs are made (as expected of optimizing performance), however in order to acheive that, marger blocks of memory (and thus more bytes read) were necessary to facilitate in-advance reading of the file data.
+With random reads, there a significantly many more reads as it is likely that the program attempts to anticipate random reads as opposed to our sequential access, resulting in many more missed reads.
+The page cache allows for quick access to the file data after once running the program, thus the number of actual
+read IOs do not increase between runs.
+
+
+5.
+1) The statistics for the 'io.stat' file reveals that additional bytes were writte back in 193 rwios. This is expected as sudo sync causes writebacks from the file that was dirtied.
+
+2) In the 'memory.stat' file, only the 'file_dirty' field changed, which likely indicates the number of dirty bytes in the cache. After writing the modified file to disk however, the number of dirtied bytes in the cache ends up 0 as we would expect. This indicates that the page cache does not perform writebacks until necessary or forced (as in the case with the sync utility) in an attempt to optimize performance.

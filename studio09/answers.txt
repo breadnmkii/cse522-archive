@@ -1,0 +1,73 @@
+Answers file for studio09
+
+1.	Haoxuan Sun, Haoran Qin, Brendan Yang
+
+2.cpu memory pids
+
+cpu memory pids
+
+List of subdirectory:
+root@rayraspberrypi:/sys/fs/cgroup/firstgroup# ls
+cgroup.controllers	cpu.max		     memory.min
+cgroup.events		cpu.stat	     memory.oom.group
+cgroup.freeze		cpu.weight	     memory.stat
+cgroup.max.depth	cpu.weight.nice      memory.swap.current
+cgroup.max.descendants	memory.current	     memory.swap.events
+cgroup.procs		memory.events	     memory.swap.high
+cgroup.stat		memory.events.local  memory.swap.max
+cgroup.subtree_control	memory.high	     pids.current
+cgroup.threads		memory.low	     pids.events
+cgroup.type		memory.max	     pids.max
+
+Contents of cpu.stat:
+usage_usec 0
+user_usec 0
+system_usec 0
+nr_periods 0
+nr_throttled 0
+throttled_usec 0
+
+3.
+The content of cpu.stat:
+usage_usec 7152077
+user_usec 7042504
+system_usec 109572
+nr_periods 0
+nr_throttled 0
+throttled_usec 0
+
+Time result:
+pi@rayraspberrypi:~/Desktop/cse522/CSE522-SP23/studio09 $ ./exec_time 
+My PID: 8706
+Press any number to continue...s
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+7.05user 0.08system 0:01.98elapsed 359%CPU (0avgtext+0avgdata 7348maxresident)k
+0inputs+0outputs (0major+1562minor)pagefaults 0swaps
+
+The user time is almost the same in these two ways. The system time measured by cgroup is slightly higher than that masured by time. 
+
+4.
+(1)The cpu.weight is 100
+(2)The value I set is 10000
+(3)The time used for second program
+usage_usec 14347451
+user_usec 14149144
+system_usec 198306
+nr_periods 0
+nr_throttled 0
+throttled_usec 0
+The user time usage and system time usage are about twice the values before. 
+cgroup will limit the CPU recourses for a program when CPU's in heavy thread. 
+
+5.
+
+
+6.
+
+
+7.
+
+
+8.

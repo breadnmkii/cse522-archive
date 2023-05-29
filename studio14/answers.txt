@@ -1,0 +1,76 @@
+1. Haoran Qin, Haoxuan Sun, Brendan Yang
+
+
+2. 
+The time used is 6.12minutes, and the .img size is 7.44 GB.
+
+3.
+ubuntu@rayubuntu:~$ uname -a
+Linux rayubuntu 5.4.0-1069-raspi #79-Ubuntu SMP PREEMPT Thu Aug 18 18:15:22 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux
+
+4. 
+(1)ubuntu@kvm-bionic:~$ uname -a
+Linux kvm-bionic 4.15.0-208-generic #220-Ubuntu SMP Mon Mar 20 14:28:12 UTC 2023 aarch64 aarch64 aarch64 GNU/Linux
+(2)The QEMU emulator virtulize both the memory and CPU. The QEMU also creates a new namespace, wihch is similar to before. It 
+is a separate OS, and it do not need to mount the system files of the original file system. 
+
+5. 
+ubuntu@rayubuntu:~/studio14$ time while [ 1 -eq 1 ]; do sleep 10; done
+^C^Z
+[1]+  Stopped                 sleep 10
+
+real    2m10.623s
+user    0m0.022s
+sys     0m0.077s
+
+6.
+dense mm.c:
+This program takes a single input describing the size of the matrices to multiply. For an input of size
+N, it computes A*B = C where each of A, B, and C are matrices of size N*N. Matrices A and B are
+filled with random values.
+random_access.c:
+This program allocates a series memory for the table, and assign random numebr to each element. Then four iterations will
+be initialized, it will update the table four times with the random number XORed with the table entry. This is to test the 
+calculation speed and memory access speed. 
+
+7. 
+ubuntu@rayubuntu:~/studio14/programs$ time ./dense_mm 512
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+
+real    0m3.582s
+user    0m3.563s
+sys     0m0.013s
+ubuntu@rayubuntu:~/studio14/programs$ time ./random_access 64
+Iteration 0 finished
+Iteration 1 finished
+Iteration 2 finished
+Iteration 3 finished
+
+real    0m13.779s
+user    0m13.616s
+sys     0m0.132s
+
+8.
+ubuntu@kvm-bionic:~$ time ./dense_mm 512
+Generating matrices...
+Multiplying matrices...
+Multiplication done!
+
+real    0m3.705s
+user    0m3.692s
+sys     0m0.013s
+ubuntu@kvm-bionic:~$ time ./random_access 64
+Iteration 0 finished
+Iteration 1 finished
+Iteration 2 finished
+Iteration 3 finished
+
+real    0m15.485s
+user    0m15.329s
+sys     0m0.149s
+
+The time used for running the two programs are all longer than that on the host OS. It experienced more overhead. 
+This is because the QEUM is a pure software framework exist between guest and host. The calculation and memory access
+requests are all need QEMU to transfer to the host OS, which needs more time to process. 

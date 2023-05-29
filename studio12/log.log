@@ -1,0 +1,115 @@
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_DELETE wd=1 mask=512 cookie=0 len=16 dir=no
+name=test
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_CREATE wd=1 mask=1073742080 cookie=0 len=16 dir=yes
+name=test
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=16 dir=yes
+name=test
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=16 dir=yes
+name=test
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=16 dir=yes
+name=test
+IN_DELETE wd=1 mask=1073742336 cookie=0 len=16 dir=yes
+name=test
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes
+IN_OPEN wd=1 mask=1073741856 cookie=0 len=0 dir=yes
+IN_ACCESS wd=1 mask=1073741825 cookie=0 len=0 dir=yes
+IN_CLOSE wd=1 mask=1073741840 cookie=0 len=0 dir=yes

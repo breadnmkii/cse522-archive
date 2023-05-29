@@ -1,0 +1,38 @@
+1. Brendan Yang, Haoxuan Sun, Haoran Qin
+
+2. Stats of time elapsed between 'rdtsc' calls
+min: 48: max: 72: mean: 62: stdiv: 4
+
+3. Stats of time elapsed between kernel module 'pmccntr_get' calls 
+min: 18, max: 25, mean: 18, stddev: 0 
+
+4. Stats of cpu cycle counts elapsed 
+(With kernel included)
+min: 4730, max: 46722, mean: 5847, stdiv: 4184
+
+(Without kernel)
+min: 126: max: 433: mean: 137: stdiv: 37
+
+5. Stats of time elapsed between user 'pmccnt_get' calls
+min: 32, max: 299, mean: 79, stddev: 37
+
+The values reported by the PMU when called from userspace are, on average, larger than the values reported when called in kernelspace.
+This is seen by the difference in part (3) where it took on average 18 vs 79 counts.
+
+6. rmmod non-root error:
+rmmod: ERROR: ../libkmod/libkmod-module.c:799 kmod_module_remove_module() could not remove 'enable_ccnt_user_522': Operation not permitted
+rmmod: ERROR: could not remove module enable_ccnt_user_522: Operation not permitted
+
+7.
+(1)
+Delete module perms check code:
+if (!capable(CAP_SYS_MODULE) || modules_disabled)
+		return -EPERM;
+
+Init module perms check code:
+err = may_init_module();
+
+*Note: may_init_module() also uses te same delete module perms check code
+
+(2)
+Both the checks use the 'capable()' function

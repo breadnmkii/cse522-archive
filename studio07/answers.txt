@@ -1,0 +1,101 @@
+1. Brendan Yang   Haoxuan Sun   Haoran Qin
+
+
+2. 
+1) ./hostname newhostname
+2) hostname: you must be root to change the host name
+3) -rwsr-xr-x 1 root root 13780 Feb 12 16:04 hostname
+4) The 's' flag in the users octect is set
+5) The utility ran as normally with sudo privilege, despite not having sudo
+
+3. 
+1) Added the 'CAP_SYS_ADMIN' capability
+2) sudo setcap CAP_SYS_ADMIN=+ep ./hostname2
+3) ./hostname2 cap_sys_admin=ep
+
+4.
+Without sudo:
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+
+With sudo:
+CapInh: 0000000000000000
+CapPrm: 000001FFFFFFFFFF
+CapEff: 000001FFFFFFFFFF
+
+These values tell us the 'inherit', 'permitted', and 'effective' capability sets of the file.
+When run with 'sudo', the values are bits that are set in the bitmask to indicate whether one
+of the 64 possible (40 implemented) capabilities are set or not.
+
+5. The '-U' flag is passed to specify a new 'user' namespace
+pi@raspberrypi:~/Desktop/cse522/studio7 $ ./ns_child_exec -U ./simple_init /bin/bash
+NOTE: File exists
+pivot_root: Operation not permitted
+init$ id -u
+65534
+init$ id -g
+65534
+init$ exit
+
+A process's user and group IDs inside a user namespace can be different from its IDs outside of the namespace.
+
+6. 
+pi@raspberrypi:~/Desktop/cse522/studio7 $ ./userns_child_exec -pumv ./simple_init /containerfs
+clone: Operation not permitted
+
+pi@raspberrypi:~/Desktop/cse522/studio7 $ ./userns_child_exec -p ./simple_init /containerfs
+clone: Operation not permitted
+pi@raspberrypi:~/Desktop/cse522/studio7 $ ./userns_child_exec -m ./simple_init /containerfs
+clone: Operation not permitted
+
+The new userspace has no capbilities that cloned by unprivilaged parent. 
+7.
+The id -u and id -g from container:
+pi@rayraspberrypi:~/Desktop/cse522/studio7 $ ./userns_child_exec -puUmv -M "0 1000 1" -G "0 1000 1" ./simple_init /containerfs                                                                                                                  
+./userns_child_exec: PID of child created by clone() is 18228                                                           
+NOTE: File exists                                                                                                       
+init$ /bin/bash                                                                                                         
+bash-5.1# ls                                                                                                            
+bin  dev  etc  home  lib  old-root  proc  sys  usr                                                                      
+bash-5.1# id -u                                                                                                         
+0                                                                
+bash-5.1# id -g                                                                                                         
+0 
+
+The ls command form container:
+bash-5.1# cd home
+bash-5.1# ls -l
+total 0
+-rw-r--r-- 1 0 0 0 Feb 14 17:23 hi
+-rw-r--r-- 1 0 0 0 Feb 14 17:23 myfiles
+-rw-r--r-- 1 0 0 0 Feb 14 17:23 somefiles
+
+The ps command from container:
+bash-5.1# ps
+  PID TTY          TIME CMD
+    1 pts/0    00:00:00 simple_init
+    2 pts/0    00:00:00 bash
+   15 pts/0    00:00:00 ps
+
+The ls command from raspberry pi root space              
+root@raspberrypi:/containerfs/home # ls -l
+total 0
+-rw-r--r-- 1 root root 0 Feb 14 11:23 hi
+-rw-r--r-- 1 root root 0 Feb 14 11:23 myfiles
+-rw-r--r-- 1 root root 0 Feb 14 11:23 somefiles
+The ps command in root namespace. 
+pi@rayraspberrypi:/containerfs/proc $ ps
+  PID TTY          TIME CMD
+ 6596 pts/1    00:00:00 ps
+22176 pts/1    00:00:00 bash
+
+Set the hostname in container will not affect the root namespace. 
+bash-5.1# hostname newhostname
+bash-5.1# hostname
+newhostname
+pi@rayraspberrypi:/containerfs/proc $ hostname
+rayraspberrypi
+
+The root namespace uses pipe to synchronize between parent and child. After cloning, the parent immediately 
+connect to the child process and write the user ID and group ID to the specific directory. 

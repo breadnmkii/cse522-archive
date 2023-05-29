@@ -1,0 +1,95 @@
+
+1.
+Haoxuan Sun, Brendan Yang, Haoran Qin
+
+2.
+pi@haoxuanpi:~/Desktop/cse522/studio13 $ docker run -it --rm alpine:20200626@sha256:9e911084d6764835ad58920aa50df63c679bdae9379ee62a458b8bfd5b2fbb67
+/ # ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=4 ttl=49 time=174.427 ms
+64 bytes from 8.8.8.8: seq=3 ttl=49 time=1175.095 ms
+64 bytes from 8.8.8.8: seq=5 ttl=49 time=18.718 ms
+64 bytes from 8.8.8.8: seq=6 ttl=49 time=18.177 ms
+
+pi@haoxuanpi:~/Desktop/cse522/studio13 $ docker run -it --rm --network none alpine:20200626@sha256:9e911084d6764835ad58920aa50df63c679bdae9379ee62a458b8bfd5b2fbb67
+/ # ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+ping: sendto: Network unreachable
+
+/ # ifconfig
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ls -l /proc/self/ns/net
+lrwxrwxrwx    1 root     root             0 Mar 28 07:48 /proc/self/ns/net -> net:[4026533250]
+
+pi@haoxuanpi:~/Desktop/cse522/studio13 $ ls -l /proc/self/ns/net
+lrwxrwxrwx 1 pi pi 0 Mar 28 02:49 /proc/self/ns/net -> 'net:[4026533057]'
+
+They are different from inside and outside of the docker, because the docker create a new network namespace. 
+
+3.
+4.
+projectpi@raspberrypi:~/Desktop/cse522/studio13/webapp $ curl http://172.17.0.2
+<html><body>Hello world!</body></html>
+
+5.
+projectpi@raspberrypi:~/Desktop/cse522/studio13/webapp $ ifconfig
+docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+        inet6 fe80::42:8ff:fe44:129a  prefixlen 64  scopeid 0x20<link>
+
+projectpi@raspberrypi:~/Desktop/cse522/studio13/webapp $ route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.27.182.254  0.0.0.0         UG    303    0        0 wlan0
+169.254.0.0     0.0.0.0         255.255.0.0     U     208    0        0 veth8df8f13
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+
+The docker container establish a route throught he bridge for network access, but it's different from the docker ip address.
+
+6.
+(1) 
+(2) docker ps output
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
+fe9c66783cbb        apache-hello3       "httpd-foreground"   9 minutes ago       Up 9 minutes        0.0.0.0:8080->80/tcp   hello-portforward
+(3)
+This illustrates that the system port forwards any IP addressed to the Pi to port 8080 to the respective process listening at port 80 locally through a 
+TCP connection
+(4) docker-proxy grep output
+tcp6       0      0 :::8080                 :::*                    LISTEN      2315/docker-proxy
+(5)
+The docker-proxy process works by using a tcp6 connection that listens for incoming connections to any IPv6 address and forwards it to the specified process
+of 2315
+
+7.
+projectpi@raspberrypi:~/Desktop/cse522/studio13/webapp $ ls -l /proc/self/ns/net
+lrwxrwxrwx 1 projectpi projectpi 0 Mar 28 16:00 /proc/self/ns/net -> 'net:[4026531840]'
+
+projectpi@raspberrypi:~/Desktop/cse522/studio13/webapp $ docker exec -ti hello-host ls -l /proc/self/ns/net
+lrwxrwxrwx 1 root root 0 Mar 28 21:01 /proc/self/ns/net -> 'net:[4026531840]'
+
+The docker created a container in the host's network namespace, which make then have the same net id. 
+
+8. 
+projectpi@raspberrypi:~/Desktop/cse522/studio13/hostapp $ docker ps
+CONTAINER ID   IMAGE          COMMAND              CREATED          STATUS          PORTS                NAMES
+6236fabe86ca   alpine         "ping apache"        27 seconds ago   Up 25 seconds                        hostapp_monitor_1
+7bab3ae29e04   apache-hello   "httpd-foreground"   29 seconds ago   Up 26 seconds   0.0.0.0:80->80/tcp   hostapp_apache_1
+
+9.
+projectpi@raspberrypi:~/Desktop/cse522/studio13/hostapp $ docker logs 6236fabe86ca -f
+64 bytes from 172.18.0.2: seq=414 ttl=64 time=0.417 ms
+64 bytes from 172.18.0.2: seq=415 ttl=64 time=0.391 ms
+64 bytes from 172.18.0.2: seq=416 ttl=64 time=0.412 ms
+64 bytes from 172.18.0.2: seq=417 ttl=64 time=0.426 ms
+64 bytes from 172.18.0.2: seq=418 ttl=64 time=0.426 ms
+64 bytes from 172.18.0.2: seq=419 ttl=64 time=0.222 ms
+64 bytes from 172.18.0.2: seq=420 ttl=64 time=0.267 ms
+64 bytes from 172.18.0.2: seq=421 ttl=64 time=0.225 ms
+64 bytes from 172.18.0.2: seq=422 ttl=64 time=0.267 ms

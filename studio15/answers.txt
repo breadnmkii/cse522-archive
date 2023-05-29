@@ -1,0 +1,60 @@
+1. Haoran Qin, Haoxuan Sun, Brendan Yang
+
+
+2. 
+ubuntu@kvm-bionic:~$ lsmod | grep virtio
+virtio_net             49152  0
+virtio_blk             20480  3
+
+3.
+bw (  KiB/s): min=145920, max=256993, per=100.00%, avg=201456.50, stdev=78540.47, samples=2
+bw (  KiB/s): min=181279, max=206176, per=97.92%, avg=193727.50, stdev=17604.84, samples=2
+bw (  KiB/s): min=17656,  max=18512, per=99.99%, avg=18144.14, stdev=222.42, samples=28
+bw (  KiB/s): min=20696,  max=82776, per=100.00%, avg=40836.08, stdev=19969.18, samples=12
+The sequential read and write have much larger bandwitch than the random read and write. Because random access jump between 
+address increase the overhead. 
+For both the sequential and and random access, read has larger bandwidth than write. 
+
+4. 
+bw (  KiB/s): min=21472, max=22016, per=99.93%, avg=21968.17, stdev=136.37, samples=23
+bw (  KiB/s): min= 8104, max=200952, per=100.00%, avg=46124.36, stdev=53484.08, samples=11
+bw (  KiB/s): min=  392, max= 8552, per=99.93%, avg=7056.00, stdev=2394.12, samples=74
+bw (  KiB/s): min=    8, max=199672, per=100.00%, avg=5077.75, stdev=19733.77, samples=102
+The bandwidth of all four actions have much samller bandwidth than the guist OS. 
+The virtual machine will drop the hardware cache, which will bring a large overhead. The host OS access though the real hardware,
+therefore the bandwidth is smaller cause it limited to the real HS compare to the the hardware cache. 
+
+5. 
+ubuntu@rayubuntu:~/studio14$ iperf -s -p 8080
+------------------------------------------------------------
+Server listening on TCP port 8080
+TCP window size:  128 KByte (default)
+------------------------------------------------------------
+[  4] local 10.229.115.169 port 8080 connected with 10.229.115.169 port 37664
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-10.0 sec   318 MBytes   267 Mbits/sec
+
+[  4] local 10.229.115.169 port 8080 connected with 10.229.115.169 port 52900
+[  4]  0.0-10.0 sec   314 MBytes   263 Mbits/sec
+
+[  4] local 10.229.115.169 port 8080 connected with 10.229.115.169 port 37578
+[  4]  0.0-10.0 sec   313 MBytes   263 Mbits/sec
+
+Median of BW is 263 Mb/s
+
+6.
+ubuntu@kvm-bionic:~$ lsmod | grep virtio
+virtio_blk             20480  3
+
+[  4] local 10.229.115.169 port 8080 connected with 10.229.115.169 port 35774
+[  4]  0.0-10.0 sec   327 MBytes   274 Mbits/sec
+
+[  4] local 10.229.115.169 port 8080 connected with 10.229.115.169 port 47416
+[  4]  0.0-10.0 sec   337 MBytes   283 Mbits/sec
+
+[  4] local 10.229.115.169 port 8080 connected with 10.229.115.169 port 44782
+[  4]  0.0-10.0 sec   336 MBytes   282 Mbits/sec
+Median of BW is 282 Mb/s
+
+The virtio just commonly virtualizd network and disk device drivers, e1000 Intel Gigabit Ethernet is the emuated Ethernet
+Controller for the virtual machine. Therefore the e1000 device has a wider bandwidth of network than the net device on virtio. 

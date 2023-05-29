@@ -1,0 +1,55 @@
+1. 
+Haoxuan Sun, Haoran Qin, Brendan Yang
+
+
+2. Snippet of code termination:
+matrix[65][3] = 195
+matrix[66][3] = 198
+matrix[67][3] = -1073538246
+prog: gdb-matrix.c:33: matrix_fn: Assertion `matrix[x][y] == x*y' failed.
+Aborted
+
+
+3. 
+Failing Cell Address:
+0x28dfc
+
+Breakpoint output:
+Breakpoint 1, __pthread_create_2_1 (newthread=0xbefff474, attr=0x0, start_routine=0x109c8 <thread_fn>, arg=0x22190)
+    at pthread_create.c:625
+625     pthread_create.c: No such file or directory.
+
+
+4. 
+Corrupting fn name: 'corrupt_it()'
+New value: -1225724527
+
+
+5. 
+Watch address var code:  watch_addr_failcell = &matrix[67][3];
+
+
+6. 
+Program completion: matrix[98][99] = 9702
+matrix[99][99] = 9801
+Program completed!
+
+
+7.
+ps command:       ps -u
+Column Headers:   USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+Program Entry:    ./usemycpu
+
+
+8. htop is useful as it provides a nice, color-coded user interface for easily identifying
+any processes with high CPU usage. It is obviously more decorated than a plain 'top'
+utility, but I would probably stick with using 'top' just for exactly that reason--top is
+fast, static, and can get me the information I need in a single command to kill a process.
+
+
+9. 
+State:          R (running)		(/proc/<PID>/status)
+Memory Usage:   1884 kB			(/proc/<PID>/maps)
+No. of Threads: 1			(/proc/<PID>/status)
+Blocked Sig:    0000000000000000	(/proc/<PID>/status)
+CPU Util:       100%			(/proc/<PID>/stat)

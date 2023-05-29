@@ -1,0 +1,213 @@
+1. Brendan Yang, Haoxuan Sun, Haoran Qin
+
+
+2.
+ 1) Client version: 20.10.5+dfsg1
+
+ 2) Engine Version: 20.10.5+dfsg1
+    containerd Ver: 1.4.13~ds1
+    runc Version:   1.0.0~rc93+ds1
+    init Version:   0.19.0
+
+ 3) dockerd Loc:    /run/containerd/containerd.sock
+
+
+3.
+ 1) getent Output: docker:x:124:pi
+
+ 2) groups Output: pi adm dialout cdrom sudo audio video plugdev games users input render netdev lpadmin docket dpio i2c spi
+
+
+4.
+ 1) --rm flag: The flag enables Docker to clean up and remove the container's filesystem on exit
+
+ 2)
+ls:
+bin dev etc home lib media mnt op proc root run sbin srv sys tmp usr var
+ps:
+PID     USER    TIME    COMMAND
+1       root    0:00    /bin/sh
+8       root    0:00    ps
+id -u:
+0
+id -g:
+0
+
+ 3)
+docker ps:
+CONTAINER ID    IMAGE           COMMAND         CREATED                 STATUS                  PORTS   NAMES
+a65a89e1750a    alpine:latest   "/bin/sh/"      About a minute ago      Up About a minute               trusting_curie
+
+ 4)
+df -a (INSIDE):
+Filesystem           1K-blocks      Used Available Use% Mounted on
+overlay               30369180   5879556  23200520  20% /
+proc                         0         0         0   0% /proc
+tmpfs                    65536         0     65536   0% /dev
+devpts                       0         0         0   0% /dev/pts
+sysfs                        0         0         0   0% /sys
+cgroup                       0         0         0   0% /sys/fs/cgroup
+mqueue                       0         0         0   0% /dev/mqueue
+shm                      65536         0     65536   0% /dev/shm
+/dev/root             30369180   5879556  23200520  20% /etc/resolv.conf
+/dev/root             30369180   5879556  23200520  20% /etc/hostname
+/dev/root             30369180   5879556  23200520  20% /etc/hosts
+devpts                       0         0         0   0% /dev/console
+proc                         0         0         0   0% /proc/bus
+proc                         0         0         0   0% /proc/fs
+proc                         0         0         0   0% /proc/irq
+proc                         0         0         0   0% /proc/sys
+proc                         0         0         0   0% /proc/sysrq-trigger
+tmpfs                  1959564         0   1959564   0% /proc/asound
+tmpfs                    65536         0     65536   0% /proc/keys
+tmpfs                    65536         0     65536   0% /proc/latency_stats
+tmpfs                    65536         0     65536   0% /proc/timer_list
+tmpfs                    65536         0     65536   0% /proc/sched_debug
+tmpfs                  1959564         0   1959564   0% /sys/firmware
+
+df -a (OUTSIDE):
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/root       30369180 5879492  23200584  21% /
+devtmpfs         1827468       0   1827468   0% /dev
+proc                   0       0         0    - /proc
+sysfs                  0       0         0    - /sys
+securityfs             0       0         0    - /sys/kernel/security
+tmpfs            1959564       0   1959564   0% /dev/shm
+devpts                 0       0         0    - /dev/pts
+tmpfs             783828     848    782980   1% /run
+tmpfs               5120       4      5116   1% /run/lock
+cgroup2                0       0         0    - /sys/fs/cgroup
+none                   0       0         0    - /sys/fs/bpf
+systemd-1              0       0         0    - /proc/sys/fs/binfmt_misc
+mqueue                 0       0         0    - /dev/mqueue
+debugfs                0       0         0    - /sys/kernel/debug
+sunrpc                 0       0         0    - /run/rpc_pipefs
+tracefs                0       0         0    - /sys/kernel/tracing
+fusectl                0       0         0    - /sys/fs/fuse/connections
+configfs               0       0         0    - /sys/kernel/config
+/dev/mmcblk0p1    258095   50953    207143  20% /boot
+tmpfs             391912      16    391896   1% /run/user/1000
+overlay                -       -         -    - /var/lib/docker/overlay2/ea2efd9e4d85874b5d53c812d38d8eda61195635d07bef225a400a9aeb429249/merged
+nsfs                   -       -         -    - /run/docker/netns/69ea2cda8ccb
+
+From the perspective of the global system namespace, the container is mounted on a directory within the
+outside the container in '/var/lib/docker/<overlay>'. Outside the container, the main system's root
+filesystem is mounted on the actual root '/'.
+
+ 5)
+ls -l (INSIDE):
+total 56
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 bin
+drwxr-xr-x    5 root     root           340 Mar  2 08:20 dev
+drwxr-xr-x    1 root     root          4096 Mar  2 08:20 etc
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 home
+drwxr-xr-x    7 root     root          4096 Feb 10 16:47 lib
+drwxr-xr-x    5 root     root          4096 Feb 10 16:47 media
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 mnt
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 opt
+dr-xr-xr-x  190 root     root             0 Mar  2 08:20 proc
+drwx------    1 root     root          4096 Mar  2 08:20 root
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 run
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 sbin
+drwxr-xr-x    2 root     root          4096 Feb 10 16:47 srv
+dr-xr-xr-x   12 root     root             0 Mar  2 08:20 sys
+drwxrwxrwt    2 root     root          4096 Feb 10 16:47 tmp
+drwxr-xr-x    7 root     root          4096 Feb 10 16:47 usr
+drwxr-xr-x   12 root     root          4096 Feb 10 16:47 var
+
+ls -l (OUTSIDE):
+total 68
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 bin
+drwxr-xr-x  1 root root 4096 Mar  2 02:20 dev
+drwxr-xr-x  1 root root 4096 Mar  2 02:20 etc
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 home
+drwxr-xr-x  7 root root 4096 Feb 10 10:47 lib
+drwxr-xr-x  5 root root 4096 Feb 10 10:47 media
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 mnt
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 opt
+dr-xr-xr-x  2 root root 4096 Feb 10 10:47 proc
+drwx------  1 root root 4096 Mar  2 02:20 root
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 run
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 sbin
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 srv
+drwxr-xr-x  2 root root 4096 Feb 10 10:47 sys
+drwxrwxrwt  2 root root 4096 Feb 10 10:47 tmp
+drwxr-xr-x  7 root root 4096 Feb 10 10:47 usr
+drwxr-xr-x 12 root root 4096 Feb 10 10:47 var
+
+
+5.
+ 1) Build output:
+Sending build context to Docker daemon  2.048kB
+Step 1/2 : FROM alpine:latest
+ ---> bc95c5506c55
+Step 2/2 : RUN apk add gcc musl-dev
+ ---> Running in 3f63456d4aa5
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.17/main/armv7/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.17/community/armv7/APKINDEX.tar.gz
+(1/11) Installing libgcc (12.2.1_git20220924-r4)
+(2/11) Installing libstdc++ (12.2.1_git20220924-r4)
+(3/11) Installing binutils (2.39-r2)
+(4/11) Installing libgomp (12.2.1_git20220924-r4)
+(5/11) Installing libatomic (12.2.1_git20220924-r4)
+(6/11) Installing gmp (6.2.1-r2)
+(7/11) Installing isl25 (0.25-r0)
+(8/11) Installing mpfr4 (4.1.0-r0)
+(9/11) Installing mpc1 (1.2.1-r1)
+(10/11) Installing gcc (12.2.1_git20220924-r4)
+(11/11) Installing musl-dev (1.2.3-r4)
+Executing busybox-1.35.0-r29.trigger
+OK: 91 MiB in 26 packages
+Removing intermediate container 3f63456d4aa5
+ ---> ca2fcf634417
+Successfully built ca2fcf634417
+Successfully tagged alpine-gcc:v0
+
+ 2) gcc output (INSIDE):
+gcc: fatal error: no input files
+compilation terminated.
+
+
+6. 
+ 1) docker ps Output:
+CONTAINER ID   IMAGE            COMMAND                  CREATED              STATUS              PORTS     NAMES
+24aab5ae4c25   mycontainer:v0   "/bin/sh -c /app/hel…"   About a minute ago   Up About a minute             sad_wu
+root@bread-n-pii:/var/lib/docker/overlay2/ea2efd9e4d85874b5d53c812d38d8eda61195635d07bef225a400a9aeb429249/merged#
+
+ 2) cgroup File Output:
+0::/system.slice/docker-24aab5ae4c2504de55eea27c38bc3d73ad0344dcd0ede6b220d386ecf9a97cfa.scope
+
+ 3)
+ls -li /proc/self/ns Output:
+total 0
+332331 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 cgroup -> 'cgroup:[4026531835]'
+332326 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 ipc -> 'ipc:[4026531839]'
+332330 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 mnt -> 'mnt:[4026531840]'
+332324 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 net -> 'net:[4026531985]'
+332327 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 pid -> 'pid:[4026531836]'
+332328 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 pid_for_children -> 'pid:[4026531836]'
+332329 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 user -> 'user:[4026531837]'
+332325 lrwxrwxrwx 1 pi pi 0 Mar  2 03:01 uts -> 'uts:[4026531838]'
+
+ls -li /proc/PID/ns Output:
+total 0
+315524 lrwxrwxrwx 1 root root 0 Mar  2 02:58 cgroup -> 'cgroup:[4026532507]'
+315519 lrwxrwxrwx 1 root root 0 Mar  2 02:58 ipc -> 'ipc:[4026532338]'
+315523 lrwxrwxrwx 1 root root 0 Mar  2 02:58 mnt -> 'mnt:[4026532336]'
+296398 lrwxrwxrwx 1 root root 0 Mar  2 02:55 net -> 'net:[4026532341]'
+315520 lrwxrwxrwx 1 root root 0 Mar  2 02:58 pid -> 'pid:[4026532339]'
+315521 lrwxrwxrwx 1 root root 0 Mar  2 02:58 pid_for_children -> 'pid:[4026532339]'
+315522 lrwxrwxrwx 1 root root 0 Mar  2 02:58 user -> 'user:[4026531837]'
+315518 lrwxrwxrwx 1 root root 0 Mar  2 02:58 uts -> 'uts:[4026532337]'
+
+The output shows us that the Docker container is within its own managed cgroup where it is a root user.
+Additionally, the cgroup contains the same namespaces as used outside the container.
+
+
+7. 
+ 1) There are 1463 files
+ 
+ 2) The size of the tar is 96347136 bytes
+
+ 3) It is much, much larger than the simple program we wrote. Likely because of all the additional
+    support files that a Docker container requires to run and maintain.

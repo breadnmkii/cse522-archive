@@ -1,0 +1,151 @@
+Temporary answers file for command line access
+
+1.	Haoxuan Sun, Haoran Qin, Brendan Yang
+
+
+2.  Yes, we observe the expected behavior of seeing the new hostname set in the
+    process calling unshare, while the observing the original hostname from a 
+    new terminal window
+
+
+3.
+Child process output:
+pi@raspberrypi:~/Desktop/cse522/CSE522-SP23/studio06 $ sudo ./unshare 
+Process pid is 1414
+New hostname is bread-n-pi
+
+Joined process output:
+pi@raspberrypi:~/Desktop/cse522/CSE522-SP23/studio06 $ sudo ./nsexec 1414 /bin/bash
+Namespace path: /proc/1414/ns/uts
+root@bread-n-pi:/home/pi/Desktop/cse522/CSE522-SP23/studio06# hostname
+bread-n-pi
+
+
+4. 
+Process output:
+pi@raspberrypi:~/Desktop/cse522/CSE522-SP23/studio06 $ sudo ./ns_child_exec -v -p ./printpids
+./ns_child_exec: PID of child created by clone() is 2096
+My pid is 1
+Parent pid is 0
+./ns_child_exec: terminating
+
+The parent PID of the child process changed because the child is created with a new PID userspace in which it is the first 'init' process.
+The original parent process ensures that the child process is not orphaned by waiting for it to terminate.
+
+
+5. 
+Child Program Output:
+./ns_child_exec: PID of child created by clone() is 6223
+My pid is 1
+Parent pid is 0
+Marked /proc as private
+Created mountpoint
+Mounting child's procfs at /proc4
+Reset /proc as shared
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       510  0.0  0.0   8264  3704 tty1     Ss   14:42   0:00 /bin/login -f
+root      6220  0.0  0.1  13020  4176 pts/0    S+   16:30   0:00 sudo ./ns_child_exec -m -p -v ./childspace_program
+root      6221  0.0  0.0   2908   364 pts/0    S+   16:30   0:00 ./ns_child_exec -m -p -v ./childspace_program
+root      6223  0.0  0.0  10860  2612 pts/0    R+   16:30   0:00 ps u
+./ns_child_exec: terminating
+
+sudo ps u Output:
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       510  0.0  0.0   8264  3704 tty1     Ss   14:42   0:00 /bin/login -f
+root      7226  0.0  0.1  13020  4124 pts/0    S+   16:31   0:00 sudo ps u
+root      7227  0.0  0.0  10860  2608 pts/0    R+   16:31   0:00 ps u
+
+The two ps outputs are rather similar... TODO ASK QUESTION ON THIS IF IS CORRECT
+
+The -m flag is passed to signify a new mount namespace.
+
+
+6.
+Command output:
+./ns_child_exec: PID of child created by clone() is 20966
+	init: my PID is 1
+init$ ./orphan_child              
+	init: created child 2
+(Parent) child_pid: 3  my_pid: 2  parent_pid: 1
+(Child) my_pid: 3  parent_pid: 2
+	init: SIGCHLD handler: PID 2 terminated
+init$ (Child) parent_pid: 1
+	init: SIGCHLD handler: PID 3 terminated
+
+The mechanisms used in simple_init.c to reap are when tcsetpgrp() is called to switch between the 
+orphan and init processes, where when the child's parent terminates, the init process then is able
+to reap the orphaned child process... TODO ASK IF THIS IS CORRECT
+
+
+7. 
+chroot shell output:
+bash-5.1# bash-5.1# ls -l
+total 0
+-rw-r--r-- 1 0 0 0 Feb  9 04:57 mybadgrades
+-rw-r--r-- 1 0 0 0 Feb  9 04:57 myfile
+-rw-r--r-- 1 0 0 0 Feb  9 04:57 mylog
+bash-5.1# ps
+  PID TTY          TIME CMD
+14111 pts/0    00:00:00 sudo
+14112 pts/0    00:00:00 su
+14117 pts/0    00:00:00 bash
+15980 pts/0    00:00:00 bash
+18370 pts/0    00:00:00 ps
+
+Default shell output:
+pi@bread-n-pii:/containerfs/home $ ls -l
+total 0
+-rw-r--r-- 1 root root 0 Feb  8 22:57 mybadgrades
+-rw-r--r-- 1 root root 0 Feb  8 22:57 myfile
+-rw-r--r-- 1 root root 0 Feb  8 22:57 mylog
+pi@bread-n-pii:/containerfs/home $ ps
+  PID TTY          TIME CMD
+18492 pts/11   00:00:00 bash
+18858 pts/11   00:00:00 ps
+
+
+8. 
+== ls output ==
+simple_init shell:
+bash-5.1# bash-5.1# ls -l
+total 0
+-rw-r--r-- 1 0 0 0 Feb  9 04:57 mybadgrades
+-rw-r--r-- 1 0 0 0 Feb  9 04:57 myfile
+-rw-r--r-- 1 0 0 0 Feb  9 04:57 mylog
+
+default root shell:
+pi@bread-n-pii:/containerfs/home $ ls -l
+total 0
+-rw-r--r-- 1 root root 0 Feb  8 22:57 mybadgrades
+-rw-r--r-- 1 root root 0 Feb  8 22:57 myfile
+-rw-r--r-- 1 root root 0 Feb  8 22:57 mylog
+
+
+== ps output ==
+simple_init shell:
+bash-5.1# ps
+  PID TTY          TIME CMD
+    1 pts/0    00:00:00 simple_init
+   13 pts/0    00:00:00 bash
+   22 pts/0    00:00:00 ps
+
+default root shell:
+pi@bread-n-pii:/containerfs/home $ ps
+  PID TTY          TIME CMD
+17205 pts/11   00:00:00 ps
+18492 pts/11   00:00:00 bash
+
+
+== hostname output ==
+simple_init shell:
+bash-5.1# hostname not-bread-n-pii
+bash-5.1# hostname
+not-bread-n-pii
+
+default root shell:
+pi@bread-n-pii:/containerfs/home $ hostname
+bread-n-pii
+
+
+The command-line flag passed to ns_child_exec to create a new UTS namespace 
+is the lowercase -u flag
